@@ -1,0 +1,265 @@
+Script started on Tue 22 Sep 2026 10:57:57 PM MDT
+osc@ubuntu:˜/testing/testbg/AurornisShell$ ls
+^[[0m^[[01:32maurornisbash^[[0m aurornisbash.c aurornishbash.o Makefile nuser.txt
+osc@ubuntu:˜/testing/testbg/AurornisShell$ e^H^[[K./aurornisbash^H^[[Ksh
+^[[0m^[[0;33mWelcome to Aurornis Shell!
+--------------------------
+^[[0m^[[0;33m>>> ^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+aurornisbash aurornisbash.c aurornishbash.o Makefile nuser.txt
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mls -al 
+^[[0m^[[0;33m-------Starting Program-------
+total 48
+drwxrwxr-x 3 osc osc  4096 Sep 22 22:57 .
+drwxrwxr-x 3 osc osc  4096 Sep 22 21:17 ..
+-rwxrwxr-x 1 osc osc 13824 Sep 22 22:47 aurornisbash
+-rw-rw-r-- 1 osc osc  5771 Sep 22 22:23 aurornisbash.c
+-rw-rw-r-- 1 osc osc  7152 Sep 22 22:47 aurornishbash.o
+drwxrwxr-x 8 osc osc  4096 Sep 22 21:17 .git
+-rw-rw-r-- 1 osc osc   424 Sep 22 21:17 Makefile
+-rw-rw-r-- 1 osc osc     0 Sep 22 21:17 nuser.txt
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mcat aut^H ^rornisbash.c &
+^[[0m^[[0;32m#include <stdio.h>^M
+#include <stdlib.h>^M
+#include <unistd.h>^M
+#include <string.h>^M
+#include <sys/types.h>^M
+#include <sys/wait.h>^M
+#include <signal.h>^M
+^M
+^M
+// function for displaying the message of the day^M
+void motd() {^M
+    printf("\033[0;33m");^M
+    printf("Welcome to Aurornis Shell!\n");^M
+    printf("--------------------------\n");^M
+    printf("\033[0m");^M
+}^M
+^M
+int custom_cd(int nargs, char *argscd[]) {^M
+    char *dir = NULL;^M
+    char current_dir[1025];^M
+    ^M
+    if(nargs > 2) {^M
+        printf("\033[0;31m");^M
+        fprintf(stderr, "<cd> cd does not allow for more than one directory.\n");^M
+        printf("\033[0m");^M
+        return 1;^M
+    }^M
+    if(nargs == 2) {^M
+        // Check if argument is "-", then its own implementation is needed^M
+        int is_dash = strcmp(argscd[1], "-"); ^M
+        if(is_dash == 0) {^M
+            dir = getenv("OLDPWD");^M
+        }^M
+        else {^M
+            dir = argscd[1];^M
+        }^M
+    }^M
+    else {^M
+        // No argument given, change to the home directory^M
+        dir = getenv("HOME");^M
+    }^M
+^M
+    if(dir == NULL) {^M
+        printf("\033[0;31m");^M
+        fprintf(stderr, "<cd> Could not get the new directory.\n");^M
+        printf("\033[0m");^M
+        return(1);^M
+    }^M
+^M
+    // Updates environment variables and changes directory^M
+    // Update OLDPWD^M
+    if(getcwd(current_dir, sizeof(current_dir)) != NULL) {^M
+        setenv("OLDPWD", current_dir, 1);^M
+    }^M
+    else {^M
+        printf("\033[0;31m");^M
+        fprintf(stderr, "<cd> Could not get the current directory for OLDPWD.\n");^M
+        printf("\033[0m");^M
+        return 1;^M
+    }^M
+^M
+    // Change directory^M
+    int is_success = chdir(dir);^M
+    if(is_success != 0) {^M
+        printf("\033[0;31m");^M
+        fprintf(stderr, "<cd> Could not change directory.\n");^M
+        printf("\033[0m");^M
+        return 1;^M
+    }^M
+^M
+    // Update PWD^M
+    if(getcwd(current_dir, sizeof(current_dir)) != NULL) {^M
+        setenv("PWD", current_dir, 1);^M
+    }^M
+    else {^M
+        printf("\033[0;31m");^M
+        fprintf(stderr, "<cd> Could not get the current directory for PWD.\n");^M
+        printf("\033[0m");^M
+        return 1;^M
+    }^M
+^M
+    return 0;^M
+}^M
+^M
+// Try getting rid of these parameters lol^M
+int main()^M
+{^M
+    // Signal to exit^M
+    int exit_program = 0;^M
+    int background = 0; // Background flag, if 1, run in the background^M
+^M
+    // Message of the day, only prints once at the beginning of the program^M
+    motd();^M
+^M
+    // Main loop^M
+    do{^M
+        // Buffer^M
+        char buff[1025];^M
+        memset(buff, 0x00, sizeof(buff));^M
+        ^M
+        // Prompt^M
+        if(background == 0) {^M
+            printf("\033[0;33m");^M
+            printf(">>> ");^M
+            printf("\033[0m");^M
+        }^M
+^M
+        // Get input^M
+        printf("\033[0;32m");^M
+        fgets(buff, 1024, stdin);^M
+        printf("\033[0m");^M
+^M
+        // Get rid of the newline character from the user pressing enter^M
+        char *nl = strchr(buff, '\n');^M
+        if(nl) {^M
+            *nl = '\0';^M
+        }^M
+^M
+^M
+        // Separate the arguments^M
+        char *args[24];^M
+        int narg = 0;//counter for the loop^M
+^M
+        // Using strtok() to separate the arguments, will end with a NULL^M
+        args[narg] = strtok(buff, " ");^M
+        while(args[narg] != NULL) {^M
+            narg++;^M
+            args[narg] = strtok(NULL, " ");^M
+        }^M
+^M
+        // Continue if there is no command^M
+        if(args[0] == NULL) {^M
+            continue;^M
+        }^M
+^M
+        // Handle &^M
+        // TESTING^M
+        int has_amp = strcmp(args[narg - 1], "&"); ^M
+        if(has_amp == 0) {^M
+            background = 1; ^M
+            args[narg - 1] = NULL;^M
+        }^M
+        else {^M
+            background = 0;//NEW^M
+        }^M
+^M
+        // Exit check^M
+        int is_exit = strcmp(args[0], "exit"); ^M
+        if(is_exit == 0) {^M
+            printf("\033[0m");^M
+            printf("Goodbye!");^M
+            exit_program = 1;^M
+            kill(0, SIGINT);^M
+            exit(0);^M
+        } ^M
+^M
+        // Fork ^M
+        pid_t pid = fork();^M
+^M
+        if(pid < 0) {^M
+            printf("\033[0;31m");^M
+            fprintf(stderr, "Fork failed.");^M
+            printf("\033[0m");^M
+            exit_program = 1;^M
+            exit(-1);^M
+        }^M
+        else if(pid == 0) { // Is a child^M
+            // implementation of cd^M
+            int is_cd = strcmp(args[0], "cd"); ^M
+            if(is_cd == 0) {^M
+                // call cd function^M
+                custom_cd(narg, args);^M
+            }^M
+            else {^M
+                //use exec to perform any tasks that are not cd or exit^M
+                printf("\033[0;33m");^M
+                execvp(args[0], args); ^M
+                printf("\033[0m"); ^M
+                background = 0;^M
+            }   ^M
+        }^M
+        else { // Is a parent^M
+            // NEED a way to tell that the program is running in the background^M
+            // only do this if the program is not running in the background^M
+            pid_t program_pid = tcgetpgrp(STDOUT_FILENO);^M
+            pid_t parent_pid = getpgrp();^M
+^M
+            // || NEW^M
+            if(program_pid == parent_pid && background == 0) {^M
+                // Process is running in the foreground^M
+                printf("\033[0;33m");^M
+                printf("-------Starting Program-------\n");^M
+                wait(NULL);^M
+                printf("-------Program Ended-------\n");^M
+                printf("\033[0m");^M
+                // exit_program = 1;^M
+                // exit(0);^M
+            }^M
+            // else {^M
+            //     waitpid(-1, NULL, WNOHANG); //NEW^M
+            //     // returns immediately if no child has executed^M
+            // }^M
+^M
+        }^M
+^M
+    } while(exit_program == 0);^M
+^M
+    // Exit the program^M
+    exit(0);^M
+    ^M
+}^M
+mkdir temp
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mcd temp
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0m^[[0;32m^[[0m^[[0;33m>>> ^[[0m^[[0;32mpwd
+^[[0m^[[0;33m-------Starting Program-------
+/home/osc/testing/testbg/AurornisShell
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mcd temp
+^[[0m^[[0;33m-------Starting Program-------
+<cd> Could not change directory
+-------Program Ended-------
+^[[0m^[[0;31m>>> ^[[0m^[[0;33m ^[[0m^[[0;32mpwd
+^[[0m^[[0;33m-------Starting Program-------
+/home/osc/testing/testbg/AurornisShell
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mcd ..
+^[[0m^[[0;33m-------Starting Program-------
+^[[0m^[[0;31m>>> ^[[0m^[[0;33m ^[[0m^[[0;32mpwd
+^[[0m^[[0;31m>>> ^[[0m^[[0;33m ^[[0m^[[0;32mpwd
+^[[0m^[[0;33m-------Starting Program-------
+/home/osc/testing/testbg/AurornisShell
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mexit
+
+osc@ubuntu:˜/testing/testbg/AurornisShell$exit
+exit
+
+Script done on Tue 22 Sep 2026 11:00:09 PM MDT
