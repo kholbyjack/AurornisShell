@@ -1,0 +1,62 @@
+Script started on Tue 22 Sep 2026 11:37:36 PM MDT
+^[[0m^[[0;33mWelcome to Aurornis Shell!
+--------------------------
+^[[0m^[[0;33m>>> ^[[0;32mmkdir temo^H ^Hp1
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+creatingdir.txt temp1 testing1.txt userdinobash.txt
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32cd temp1
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32menc^H ^Hv
+^[[0m^[[0;33m-------Starting Program-------
+TERM=linux
+LANG=en_US.UTF-8
+HOME=/home/dinobash
+SHELL=/bin.aurornisbash
+USER=dinobash
+PATH=/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+MAIL=/var/mail/dinobash
+XDG_SESSION_ID=1
+XDG_RUNTIME_DIR=/run/user/1001
+XDG_SEAT=seat0
+XDG_VTNR=1
+HUSHLOGIN=FALSE
+OLDPWD=/home/dinobash
+PWD=/home/dinobash/temp1
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mnano tse^H ^H^H ^Hest1.txt
+^[[0m^[[0;33m-------Starting Program-------
+^[[1;37r^[[0;10m^[[41^[[?7h^[[39;49m^[[?251^[[?1c^[[39;49m^[[0;10m^[[H^[[J^[[35;45H^[[0;10;7m[ New $
+^[[0m^[[0;33m>>> ^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+test1.txt
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mls &
+^[[0m^[[0;32mtest1.txt
+cd ..
+^[[0m^[[0;33m-------Starting Program-------
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0m^[[0;32m^[[0m^[[0;33m>>> ^[[0m^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+test1.txt
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0m^[[0;32mcd ..
+^[[0m^[[0;33m-------Starting Program-------
+^[[0m^[[0;33m>>> ^[[0m^[[0;32mpwd
+^[[0m^[[0;33m-------Starting Program-------
+/home/dinobash/temp1
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mls
+^[[0m^[[0;33m-------Starting Program-------
+dinobash osc
+-------Program Ended-------
+^[[0m^[[0;33m>>> ^[[0;32mexit
+
+Script done on Tue 22 Sep 2026 11:40:03 PM MDT
